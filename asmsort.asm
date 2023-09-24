@@ -7,13 +7,14 @@
 ;  * ----------------------------------------------------------------------------
 ;  */
 
-%define SYS_EXIT  1
-%define SYS_READ  3
-%define SYS_WRITE 4
+%assign SYS_EXIT  1
+%assign SYS_READ  3
+%assign SYS_WRITE 4
+%assign SYS_BRK   45
 
-%define STDIN  0
-%define STDOUT 1
-%define STDERR 2
+%assign STDIN  0
+%assign STDOUT 1
+%assign STDERR 2
 
 
 section .text
