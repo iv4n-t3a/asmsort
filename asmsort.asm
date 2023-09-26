@@ -38,6 +38,20 @@
     int 0x80
 %endmacro
 
+%macro ALLOC 1
+    mov eax, SYS_BRK
+    mov ebx, 0
+    int 0x80
+
+    mov esi, eax
+
+    mov eax, SYS_BRK
+    mov ebx, esi
+    add ebx, %1
+    int 0x80
+%endmacro
+
+
 %macro SWAP 2
     mov esi, %1
     mov %1, %2
@@ -50,18 +64,74 @@
     div esi
 %endmacro
 
+%macro DIV 2
+    mov eax, %1
+    DIV_EAX %2
+    mov %1, eax
+%endmacro
+
+%macro MUL_EAX 1
+    mov edx, %1
+    mul edx
+%endmacro
+
+%macro MUL 2
+    mov eax, %1
+    MUL_EAX %2
+    mov %1, %2
+%endmacro
+
 
 section .text
 	global _start
 
 _start:
     call input_num
-    push eax
-    call input_num
-    pop ebx
-    add eax, ebx
-    call output_num
+    mov edi, eax
+
+    push edi
+    MUL edi, 4
+    ALLOC edi
+    pop edi
+
+    call input_arr
+    call output_arr
     EXIT 0
+
+
+input_arr:
+    mov ecx, edi
+
+_input_arr_loop:
+    push ecx
+    push esi
+    push edi
+    call input_num
+    pop edi
+    pop esi
+    pop ecx
+
+    mov long [esi + 4*ecx], eax
+    loop _input_arr_loop
+    ret
+
+
+output_arr:
+    mov ecx, edi
+
+_output_arr_loop:
+    mov eax, long [esi + 4*ecx]
+
+    push ecx
+    push esi
+    push edi
+    call output_num
+    pop edi
+    pop esi
+    pop ecx
+
+    loop _output_arr_loop
+    ret
 
 
 input_num:
@@ -78,8 +148,7 @@ _input_num_loop:
     jl _input_num_ret
 
     pop eax
-    mov edx, 10
-    mul edx
+    MUL_EAX 10
     add eax, [input]
     sub eax, '0'
     jmp _input_num_loop
@@ -123,7 +192,6 @@ count_num_len:
 _count_num_len_loop:
     DIV_EAX 10
     inc ebx
-
     cmp eax, 0
     je _count_num_ret
     jmp _count_num_len_loop
@@ -140,8 +208,7 @@ _reverse_num_loop:
     DIV_EAX 10
     SWAP eax, ebx
     mov ecx, edx
-    mov edx, 10
-    mul edx
+    MUL_EAX 10
     add eax, ecx
     SWAP eax, ebx
 
