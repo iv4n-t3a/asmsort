@@ -95,8 +95,50 @@ _start:
     pop edi
 
     call input_arr
+    push esi
+    push edi
+    mov eax, 3
+    call partition
+    pop edi
+    pop esi
+    WRITE_STR newline_msg, newline_len
     call output_arr
     EXIT 0
+
+
+partition:
+    mov ebx, esi
+    mov esi, 0
+
+_partition_loop:
+
+    dec esi
+_partition_left_loop:
+    inc esi
+    cmp eax, [ebx + 4*esi]
+    jg _partition_left_loop
+
+    inc edi
+_partition_right_loop:
+    dec edi
+    cmp eax, [ebx + 4*edi]
+    jl _partition_right_loop
+
+    cmp esi, edi
+    jge _partition_ret
+
+    ; swap over ecx and edx
+    mov ecx, [ebx + 4*esi]
+    mov edx, [ebx + 4*edi]
+    mov [ebx + 4*esi], edx
+    mov [ebx + 4*edi], ecx
+
+    jmp _partition_loop
+
+_partition_ret:
+    mov eax, esi
+    mov ebx, edi
+    ret
 
 
 input_arr:
