@@ -138,6 +138,9 @@ _partition_right_loop:
 _partition_ret:
     mov eax, esi
     mov ebx, edi
+    dec eax
+    dec ebx
+    SWAP eax, ebx
     ret
 
 
