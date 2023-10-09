@@ -1,6 +1,11 @@
-FILENAME=asmsort
+TARGET=asmsort
 
-$(FILENAME): $(FILENAME).asm
-	nasm -f elf $(FILENAME).asm
-	ld -m elf_i386 -s -o $(FILENAME) $(FILENAME).o
-	rm $(FILENAME).o
+$(TARGET): $(TARGET).asm
+	nasm -f elf $(TARGET).asm
+	ld -m elf_i386 -s -o $(TARGET) $(TARGET).o
+	rm $(TARGET).o
+
+clean:
+	rm -f $(TARGET)
+
+.PHONY: clean
