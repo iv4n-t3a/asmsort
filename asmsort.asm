@@ -15,9 +15,9 @@
 %assign STDOUT 1
 %assign STDERR 2
 
-%assign RANDOM_SEED 1289461685
-%assign RANDOM_SUMMAND 354244160
-%assign RANDOM_MULTIPLIER 3137108768
+%assign RANDOM_SEED       1289461682
+%assign RANDOM_SUMMAND    3542491627
+%assign RANDOM_MULTIPLIER 1570108727
 
 
 %macro EXIT 1
@@ -98,16 +98,74 @@ _start:
     ALLOC edi
     pop edi
 
-    call input_arr
     push esi
     push edi
-    mov eax, 3
+    call input_arr
+    pop edi
+    pop esi
+
+    call sort
+    WRITE_STR newline_msg, newline_len
+    call output_arr
+
+    EXIT 0
+
+
+sort:
+    cmp edi, 1
+    jle _sort_ret
+
+    push esi
+    push edi
+    call update_next_random
+    mov eax, [next_random]
+    DIV_EAX edi
+    mov eax, edx
+    pop edi
+    pop esi
+    mov eax, [esi + 4*eax]
+
+    push eax
+    push esi
+    push edi
     call partition
     pop edi
     pop esi
-    WRITE_STR newline_msg, newline_len
-    call output_arr
-    EXIT 0
+    pop eax
+    call find
+
+    push edi
+    mov edi, eax
+    dec edi
+    call sort
+    pop edi
+
+    push esi
+    push edi
+    dec eax
+    sub edi, eax
+    lea esi, [esi + 4*eax]
+    call sort
+    pop edi
+    pop esi
+
+_sort_ret:
+    ret
+
+
+find:
+    mov ecx, edi
+    dec ecx
+
+_find_loop:
+    cmp eax, [esi + 4*ecx]
+    je _find_ret
+    loop _find_loop
+    mov ecx, edi
+
+_find_ret:
+    mov eax, ecx
+    ret
 
 
 partition:
@@ -145,11 +203,6 @@ _partition_right_loop:
     jmp _partition_loop
 
 _partition_ret:
-    mov eax, esi
-    mov ebx, edi
-    dec eax
-    dec ebx
-    SWAP eax, ebx
     ret
 
 
@@ -287,7 +340,7 @@ _reverse_num_ret:
 section .bss
 	input resb 1
 	output resb 1
-    next_random dw RANDOM_SEED
+    next_random resb RANDOM_SEED
 
 section .data
 	newline_msg db 0xa, 0xd
