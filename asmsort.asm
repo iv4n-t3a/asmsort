@@ -119,17 +119,22 @@ _partition_loop:
     dec esi
 _partition_left_loop:
     inc esi
+
+    cmp esi, edi
+    jge _partition_ret
+
     cmp eax, [ebx + 4*esi]
     jg _partition_left_loop
 
     inc edi
 _partition_right_loop:
     dec edi
-    cmp eax, [ebx + 4*edi]
-    jl _partition_right_loop
 
     cmp esi, edi
     jge _partition_ret
+
+    cmp eax, [ebx + 4*edi]
+    jl _partition_right_loop
 
     ; swap over ecx and edx
     mov ecx, [ebx + 4*esi]
