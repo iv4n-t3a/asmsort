@@ -15,6 +15,10 @@
 %assign STDOUT 1
 %assign STDERR 2
 
+%assign RANDOM_SEED 1289461685
+%assign RANDOM_SUMMAND 354244160
+%assign RANDOM_MULTIPLIER 3137108768
+
 
 %macro EXIT 1
     mov eax, SYS_EXIT
@@ -144,6 +148,15 @@ _partition_ret:
     ret
 
 
+update_next_random:
+    mov eax, [next_random]
+    MUL_EAX RANDOM_MULTIPLIER
+    add eax, edx
+    add eax, RANDOM_SUMMAND
+    mov [next_random], eax
+    ret
+
+
 input_arr:
     mov ecx, edi
 
@@ -269,6 +282,7 @@ _reverse_num_ret:
 section .bss
 	input resb 1
 	output resb 1
+    next_random dw RANDOM_SEED
 
 section .data
 	newline_msg db 0xa, 0xd
