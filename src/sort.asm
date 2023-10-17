@@ -14,13 +14,9 @@ sort:
     pop esi
     mov eax, [esi + 4*eax]
 
-    push eax
-    push esi
-    push edi
+    PUSH_ALL
     call partition
-    pop edi
-    pop esi
-    pop eax
+    POP_ALL
     call find
 
     push edi
@@ -83,12 +79,7 @@ _partition_right_loop:
     cmp eax, [ebx + 4*edi]
     jl _partition_right_loop
 
-    ; swap over ecx and edx
-    mov ecx, [ebx + 4*esi]
-    mov edx, [ebx + 4*edi]
-    mov [ebx + 4*esi], edx
-    mov [ebx + 4*edi], ecx
-
+    SWAP {long [ebx + 4*esi]}, {long [ebx + 4*edi]}
     jmp _partition_loop
 
 _partition_ret:

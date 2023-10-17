@@ -49,7 +49,8 @@
 
 %macro SWAP 2
     push %1
-    mov %1, %2
+    push %2
+    pop %1
     pop %2
 %endmacro
 
@@ -76,4 +77,22 @@
     mov eax, %1
     MUL_EAX %2
     mov %1, %2
+%endmacro
+
+%macro PUSH_ALL 0
+    push eax
+    push ebx
+    push ecx
+    push edx
+    push esi
+    push edi
+%endmacro
+
+%macro POP_ALL 0
+    pop edi
+    pop esi
+    pop edx
+    pop ecx
+    pop ebx
+    pop eax
 %endmacro
