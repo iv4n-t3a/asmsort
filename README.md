@@ -17,6 +17,6 @@ To build:
 
 To run:
 
-    ./asmsort
+    ./main
 
 First input elements count in your array, then numbers.

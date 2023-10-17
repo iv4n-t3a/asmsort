@@ -1,11 +1,20 @@
-TARGET=asmsort
+ROOTDIR := $(shell pwd)
+SRCDIR := $(ROOTDIR)/src
+SRCEXT := asm
+MAIN := main
+SOURCES := $(shell find $(SRCDIR) -type f -name '*.$(SRCEXT)')
 
-$(TARGET): $(TARGET).asm
-	nasm -f elf $(TARGET).asm
-	ld -m elf_i386 -s -o $(TARGET) $(TARGET).o
-	rm $(TARGET).o
+export ROOTDIR
+export MAIN
+export SOURCES
+
+all: $(SOURCES)
+	@make -C $(SRCDIR)
+
+run:
+	./$(MAIN)
 
 clean:
 	rm -f $(TARGET)
 
-.PHONY: clean
+.PHONY: all, run, clean
