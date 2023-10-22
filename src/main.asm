@@ -8,8 +8,7 @@
 ;  */
 
 %include "macro.asm"
-%include "numout.asm"
-%include "numin.asm"
+%include "numio.asm"
 %include "arrio.asm"
 %include "random.asm"
 %include "sort.asm"
