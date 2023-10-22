@@ -1,7 +1,7 @@
 section .text
 
 sort:
-    cmp edi, 1
+    cmp edi, 0
     jle _sort_ret
 
     push esi
@@ -14,20 +14,22 @@ sort:
     pop esi
     mov eax, [esi + 4*eax]
 
-    PUSH_ALL
+    push esi
+    push edi
     call partition
-    POP_ALL
-    call find
+    pop edi
+    pop esi
 
     push edi
+    push eax
     mov edi, eax
-    dec edi
     call sort
+    pop eax
     pop edi
 
     push esi
     push edi
-    dec eax
+    inc eax
     sub edi, eax
     lea esi, [esi + 4*eax]
     call sort
@@ -35,21 +37,6 @@ sort:
     pop esi
 
 _sort_ret:
-    ret
-
-
-find:
-    mov ecx, edi
-    dec ecx
-
-_find_loop:
-    cmp eax, [esi + 4*ecx]
-    je _find_ret
-    loop _find_loop
-    mov ecx, edi
-
-_find_ret:
-    mov eax, ecx
     ret
 
 
@@ -62,25 +49,23 @@ _partition_loop:
     dec esi
 _partition_left_loop:
     inc esi
-
-    cmp esi, edi
-    jge _partition_ret
-
     cmp eax, [ebx + 4*esi]
     jg _partition_left_loop
 
     inc edi
 _partition_right_loop:
     dec edi
+    cmp eax, [ebx + 4*edi]
+    jl _partition_right_loop
 
     cmp esi, edi
     jge _partition_ret
 
-    cmp eax, [ebx + 4*edi]
-    jl _partition_right_loop
-
     SWAP {long [ebx + 4*esi]}, {long [ebx + 4*edi]}
+    inc esi
+    dec edi
     jmp _partition_loop
 
 _partition_ret:
+    mov eax, edi
     ret

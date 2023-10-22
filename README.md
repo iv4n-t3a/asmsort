@@ -4,8 +4,6 @@
 
 ![demo](demo.png)
 
-Now, works only with different numbers, sorry:)
-
 ## Build and run:
 
 To build it on `x86` linux machine you need to have `make` and `nasm` installed.
