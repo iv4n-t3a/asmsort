@@ -1,4 +1,4 @@
-# x86 nasm linux assembly quicksort implementation with random pivot chose
+# x86 nasm linux assembly quicksort implementation with random pivot picking
 
 ## Demo:
 
@@ -17,4 +17,4 @@ To run:
 
     ./main
 
-First input elements count in your array, then numbers.
+Input count of elements in your array, then numbers from array.
